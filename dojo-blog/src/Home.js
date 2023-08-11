@@ -1,29 +1,26 @@
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import BlogList from "./BlogList";
+import useFetch from "./useFetch";
 
-const Home = () => {
-  const [blogs, setBlogs] = useState([
-    { title: 'My new website', body: 'lorem ipsum...', author: 'mario', id: 1 },
-    { title: 'Welcome party!', body: 'lorem ipsum...', author: 'yoshi', id: 2 },
-    { title: 'Web dev top tips', body: 'lorem ipsum...', author: 'mario', id: 3 }
-  ])
-
-  const [name, setName] = useState('mario');
+const Home = ({fetchUrl}) => {
+  // const [name, setName] = useState('mario');
+  // const [blogs, setBlogs] = useState([]);
 
   const handleDelete = (id) => {
-    const newBlogs = blogs.filter(blog => blog.id !== id);
-    setBlogs(newBlogs);
+    // const newBlogs = blogs.filter(blog => blog.id !== id);
+    // setBlogs(newBlogs);
   }
-
-  useEffect(() => {
-    console.log('use effect ran');
-    console.log(blogs);
-  }, [name])
-
+  // const $envNode = document.getElementById('gitenv');
+  // const git_token = $envNode.attributes.getNamedItem('data-git-token').value;
+  // const git_domain = $envNode.attributes.getNamedItem('data-git-domain').value;
+  // const dataUrl = document.URL.split('.')[0].replace(/-\d+$/,'') + '-3001.' + git_domain + '/blogs';
+  const { data:blogs, isPending, fetchError } = useFetch(fetchUrl);
   return (
     <div className="home">
-      <BlogList blogs={blogs} title="All Blogs" handleDelete={handleDelete} />
-      <button onClick={() => setName('luigi')}>change name</button>
+      {isPending && <div> Loading.... </div>}
+      {fetchError !== '' && <div> Failed to load!! {fetchError} </div>}
+      {!isPending && !fetchError && <BlogList blogs={blogs} title="All Blogs" handleDelete={handleDelete} />}
+      {/* <button onClick={() => setName('luigi')}>change name</button> */}
     </div>
   );
 }
